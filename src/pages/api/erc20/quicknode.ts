@@ -24,17 +24,15 @@ export const getTxBlockNum = (txHash: string) => {
 
 
 // Getting the current block number to compare with the blocknumber that a ERC20 contract has deployed thanks to  Quicknode API ❤️ 🇯🇵
-export const getCurrentBlockNum = (txHash: string) => {
+export const getCurrentBlockNum = () => {
   const req = fetch(quicknode_endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      "method": "eth_getTransactionByHash",
-      "params": [
-        txHash
-      ],
+      "method": "eth_blockNumber",
+      "params": [],
       "id": 1,
       "jsonrpc": "2.0"
     }),
