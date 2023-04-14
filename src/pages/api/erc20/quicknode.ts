@@ -70,3 +70,24 @@ export const getCurrentBlockNum = async () => {
   return parseInt(data.result, 16)
 }
 
+export const ethGetProof = async (address: string, slots: string[], blockNumber: number) => {
+  const req = await fetch(quicknode_endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      "method": "eth_getProof",
+      "params": [
+        address,
+        slots,
+        `0x${blockNumber.toString(16)}`
+      ],
+      "jsonrpc": "2.0",
+      "id": 0
+    })
+  })
+
+  const data: any = await req.json()
+  return data.result
+}
