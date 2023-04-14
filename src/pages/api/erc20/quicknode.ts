@@ -1,5 +1,4 @@
-// ! We should get this as a environment variable 
-const quicknode_endpoint = "blablaquicknode.com/12039812";
+const quicknode_endpoint = process.env.QUICKNODE_API as string
 
 // Getting the block number by transaction hash thanks to  Quicknode API ❤️ 🇯🇵
 export const getTxBlockNum = (txHash: string) => {

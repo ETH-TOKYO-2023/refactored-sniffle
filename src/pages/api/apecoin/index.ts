@@ -13,10 +13,11 @@ const post = (_req: NextApiRequest, res: NextApiResponse<Data>) => {
   res.status(200)
 }
 
-const get = (_req: NextApiRequest, res: NextApiResponse<Data>) => {
+const get = (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const address = req.query.addr as string
   res.status(200).json({
     coupons: {
-      "proofOfOG": proofOfOG()
+      "proofOfOG": proofOfOG(address, contract_creation_tx),
     }
   })
 }
