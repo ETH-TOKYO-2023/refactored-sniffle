@@ -66,19 +66,19 @@ SponsorToName.set(3, "BOB TOKEN");
 const CouponIdToContract = new Map();
 CouponIdToContract.set(
   0,
-  "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
+  "0x052cff61dcf94606146f7876127f31fe9c9c20b6369af5f92937f423eecc6b89"
 );
 CouponIdToContract.set(
   1,
-  "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
+  "0x052cff61dcf94606146f7876127f31fe9c9c20b6369af5f92937f423eecc6b89"
 );
 CouponIdToContract.set(
   2,
-  "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
+  "0x052cff61dcf94606146f7876127f31fe9c9c20b6369af5f92937f423eecc6b89"
 );
 CouponIdToContract.set(
   3,
-  "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
+  "0x052cff61dcf94606146f7876127f31fe9c9c20b6369af5f92937f423eecc6b89"
 );
 
 export default function Home() {
