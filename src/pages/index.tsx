@@ -386,10 +386,7 @@ export default function Home() {
           <div
             className="reward"
             style={{ background: AnimeToColor.get(1) }}
-            onClick={async () => {
-              await getAPEstatus();
-              setSelectedCoupon(0);
-            }}>
+            onClick={async () => setSelectedCoupon(0)}>
             <div className="sponsor_logo">
               <Image src={Sponor1} alt="sponsor" />
             </div>
