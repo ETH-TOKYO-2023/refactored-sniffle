@@ -21,8 +21,10 @@ export const proofOfOG = async (address: string, contract_address: string, block
       )
     ])
   )
+  console.log(balance_slot_keccak)
 
   const balance = parseInt(await ethGetStorageAt(contract_address, balance_slot_keccak, block_number), 16)
+  console.log(balance)
   if (balance > 0) {
     //return { blockNum: tx.blockNumber, slot: balance_slot_keccak }
     return { blockNum: block_number, slot: balance_slot_keccak }
@@ -58,7 +60,6 @@ export const herodotusProof = async (address: string, blockNum: number) => {
     body: JSON.stringify(body)
   });
   const data = await response.json();
-  console.log(data)
   return data;
 }
 
