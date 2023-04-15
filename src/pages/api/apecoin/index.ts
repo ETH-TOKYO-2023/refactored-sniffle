@@ -5,7 +5,7 @@ import { Contract, Provider, number } from "starknet";
 import { Data } from "../utils/data";
 import { BigNumber, utils } from "ethers";
 
-type Data = {
+type ReturnData = {
   coupons: any
 }
 
@@ -15,7 +15,7 @@ const contract_data = {
   storage_slot_balance: 0
 }
 
-const post = async (_req: NextApiRequest, res: NextApiResponse<Data>) => {
+const post = async (_req: NextApiRequest, res: NextApiResponse<ReturnData>) => {
   //const address = req.query.addr as string
   const address = '0x466dd6e6f3f5dd8b1da504a893261fa61d16a0ed'
   const proofOG = await proofOfOG(address, contract_data.address, contract_data.creation_tx, contract_data.storage_slot_balance)
@@ -97,7 +97,7 @@ const post = async (_req: NextApiRequest, res: NextApiResponse<Data>) => {
 }
 
 
-const get = async (_req: NextApiRequest, res: NextApiResponse<Data>) => {
+const get = async (_req: NextApiRequest, res: NextApiResponse<ReturnData>) => {
   //const address = req.query.addr as string
   const address = '0x466dd6e6f3f5dd8b1da504a893261fa61d16a0ed'
   const proofOG = await proofOfOG(address, contract_data.address, contract_data.creation_tx, contract_data.storage_slot_balance)
@@ -110,7 +110,7 @@ const get = async (_req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<ReturnData>
 ) {
   if (req.method === 'GET') {
     get(req, res)
