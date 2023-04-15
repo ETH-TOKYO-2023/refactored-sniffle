@@ -27,6 +27,7 @@ import {
   useAccount as useStarknetAccount,
   useContractWrite,
   useTransaction,
+  useConnectors,
 } from "@starknet-react/core";
 
 //argent x
@@ -87,25 +88,17 @@ VerifyList.set(
   "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
 );
 
-declare enum BaseUrl {
-  SN_MAIN = "https://alpha-mainnet.starknet.io",
-  SN_GOERLI = "https://alpha4.starknet.io",
-  SN_GOERLI2 = "https://alpha4-2.starknet.io",
-}
-
 export default function Home() {
   const [starkaddress, setstarkAddress] = useState<String>();
   const [starknetClient, setStarknetClient] = useState();
   const [supportSessions, setSupportsSessions] = useState<boolean | null>(null);
-  const [isConnected, setConnected] = useState(false);
+  const { address, isConnected } = useAccount();
   // const [chain, setChain] = useState(chainId());
   const [calldata, setCallData] = useState([]);
   const [starkaccount, setstarkAccount] = useState(null);
   const [selectedCoupon, setSelectedCoupon] = useState(4);
-  const { address } = useAccount();
 
-  // const testAddress =
-  //   "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec";
+  const { connect, connectors } = useConnectors();
 
   // ------------------ contract write ------------------
 
@@ -113,14 +106,11 @@ export default function Home() {
     () => ({
       contractAddress: CouponIdToContract.get(selectedCoupon),
       entrypoint: "mint_coupon",
-      calldata: [address, calldata],
+      calldata: calldata,
     }),
-    [address, calldata]
+    [selectedCoupon, calldata]
   );
   const { writeAsync } = useContractWrite({ calls: tx });
-
-  //? use writeAsync to execute the call, just:
-  // await writeAsync()
 
   const [txHash, setTxHash] = useState<undefined | string>(undefined);
   const { data, isLoading, error } = useTransaction({ hash: txHash });
@@ -128,70 +118,7 @@ export default function Home() {
 
   // ------------------ end contract write ------------------
 
-  //useEffect argent x
-  // useEffect(() => {
-  //   const handler = async () => {
-  //     const wallet = await silentConnectWallet();
-  //     console.log(wallet);
-  //     setstarkAddress(wallet?.selectedAddress);
-  //     setChain(chainId());
-  //     setConnected(!!wallet?.isConnected);
-  //     if (wallet?.account) {
-  //       setstarkAccount(wallet.account);
-  //     }
-  //     setSupportsSessions(null);
-  //     if (wallet?.selectedAddress) {
-  //       try {
-  //         const sessionSupport = await supportsSessions(
-  //           wallet.selectedAddress,
-  //           wallet.provider
-  //         );
-  //         setSupportsSessions(sessionSupport);
-  //       } catch {
-  //         setSupportsSessions(false);
-  //       }
-  //     }
-  //   };
-
-  //   (async () => {
-  //     await handler();
-  //     addWalletChangeListener(handler);
-  //   })();
-
-  //   return () => {
-  //     removeWalletChangeListener(handler);
-  //   };
-  // }, []);
-
-  // // read abi of Test contract
-  // const myTestContract = new Contract(factoryABI, testAddress, provider);
-
-  // const [verifyList, setVerifyList] =
-  const SFTs = ["APE COIN", "X XOIN", "TCCC"];
-
-  // const handleConnectClick = async () => {
-  //   const wallet = await connectWallet();
-  //   console.log(wallet);
-  //   setstarkAddress(wallet?.selectedAddress);
-  //   setChain(chainId());
-  //   setConnected(!!wallet?.isConnected);
-  //   if (wallet?.account) {
-  //     setstarkAccount(wallet.account);
-  //   }
-  //   setSupportsSessions(null);
-  //   if (wallet?.selectedAddress) {
-  //     const sessionSupport = await supportsSessions(
-  //       wallet.selectedAddress,
-  //       wallet.provider
-  //     );
-  //     console.log(wallet);
-  //     console.log(
-  //       "🚀 ~ file: index.tsx ~ line 72 ~ handleConnectClick ~ sessionSupport",
-  //       sessionSupport
-  //     );
-  //     setSupportsSessions(sessionSupport);
-  //   }
-  // };
+  // ------------------ start api call  ------------------
 
   //APE Proof of OG
   const APEProofofOG = async () => {
@@ -203,13 +130,30 @@ export default function Home() {
     setCallData(res.data);
   };
 
+  //GHO Proof of OG
+  const GHOProofofOG = async () => {
+    const res = await axios.post("/api/aave-gho", {
+      addr: address,
+    });
+    console.log(address);
+    console.log(res.data);
+    setCallData(res.data);
+  };
+
+  //BOB Proof of OG
+  const BOBProofofOG = async () => {
+    const res = await axios.post("/api/zkbob", {
+      addr: address,
+    });
+    console.log(address);
+    console.log(res.data);
+    setCallData(res.data);
+  };
+
+  // ------------------ end api call  ------------------
+
   const claimCoupon = async () => {
     // Interaction with the cairo contract
-    // const res1 = starknetClient.provider.callContract;
-    //
-    // if(selectedCoupon===0) {
-    //   const apecontract =
-    // }
 
     // ------------------ contract write ------------------
 
@@ -229,6 +173,8 @@ export default function Home() {
 
     //? I'll write the interaction code here
   };
+  //TODO : call get api so to check when user logined with metamask, make claimed checkmark
+  // useEffect(() => {}, []);
 
   const VerifyCondition = () => {
     return (
@@ -242,7 +188,7 @@ export default function Home() {
         ) : selectedCoupon === 1 ? (
           <div>
             <div>PROOF OF GHO COIN OG</div>
-            <button>Verify</button>
+            <button onClick={() => GHOProofofOG()}>Verify</button>
           </div>
         ) : selectedCoupon === 2 ? (
           <div>
@@ -261,7 +207,7 @@ export default function Home() {
           <div>
             {" "}
             <div>PROOF OF ZKBOB TOKEN OG</div>
-            <button>Verify</button>
+            <button onClick={() => BOBProofofOG()}>Verify</button>
           </div>
         ) : null}
       </div>
@@ -272,6 +218,8 @@ export default function Home() {
     return (
       <button
         onClick={() => {
+          //? Error no connector connected is gone, another error is here but I'll leave you with that hahah ahhh okay
+          //? sry have to go, have fun thank you !!
           claimCoupon();
         }}>
         Claim
@@ -329,7 +277,10 @@ export default function Home() {
             <Image src={Anime1} alt="anime" />
             <div className="explanation">
               <div>APE COIN REWARD SFT</div>
-              <div>PROOF OF OG x1</div>
+              <div>
+                PROOF OF OG x1
+                {isConnected && <div>Verified</div>}
+              </div>
             </div>
           </div>
         </div>

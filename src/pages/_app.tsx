@@ -16,7 +16,11 @@ import {
 } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-import { StarknetConfig, InjectedConnector } from "@starknet-react/core";
+import {
+  StarknetConfig,
+  InjectedConnector,
+  useConnectors,
+} from "@starknet-react/core";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [goerli],
@@ -48,7 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
   ];
 
   return (
-    <StarknetConfig connectors={connectors}>
+    <StarknetConfig connectors={connectors} autoConnect={true}>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
           <Component {...pageProps} />
