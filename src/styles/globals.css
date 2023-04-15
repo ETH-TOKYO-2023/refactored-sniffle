@@ -181,3 +181,21 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.verified {
+    font-weight: bolder;
+    color: blue;
+    margin:0 10px
+}
+.v_btn {
+  background: #ff875b;
+    border: 1px solid orange;
+    border-radius: 10px;
+    margin: 0 10px;
+    color: white;
+    font-weight: bold;
+}
+
+.conditionboxStyle{
+  display: flex;
+}

@@ -84,6 +84,9 @@ CouponIdToContract.set(
 export default function Home() {
   const [starkaddress, setstarkAddress] = useState<String>();
   const [starknetClient, setStarknetClient] = useState();
+  const [apeStatus, setAPEStatus] = useState(false);
+  const [ghoStatus, setGHOStatus] = useState(false);
+  const [bobStatus, setBOBStatus] = useState(false);
   const [supportSessions, setSupportsSessions] = useState<boolean | null>(null);
   const { address, isConnected } = useAccount();
 
@@ -143,6 +146,12 @@ export default function Home() {
     console.log(address);
     console.log(res.data);
     setCallData(res.data);
+    const res1 = await getAPEstatus();
+    if (res1.coupons.proofOfOG) {
+      setAPEStatus(true);
+    }
+
+    console.log(apeStatus);
   };
 
   //GHO Proof of OG
@@ -206,78 +215,112 @@ export default function Home() {
     //? I'll write the interaction code here
   };
 
-  const getAPEstatus = async () => {
+  // APE API
+  const getAPE = async () => {
     const res = await axios.get("/api/apecoin?addr=" + address);
-    if (res.data.coupons.proofOFOG) {
-      const copy = { ...verifyList };
-      copy.ape = true;
-      setVerifyList(copy);
-    }
+    return res;
+  };
+  const getAPEstatus = async () => {
+    const res = await getAPE();
+    return res.data;
+  };
+
+  // GHO API
+  const getGHO = async () => {
+    const res = await axios.get("/api/aave-gho?addr=" + address);
     return res;
   };
   const getGHOstatus = async () => {
-    const res = await axios.get("/api/aave-gho?addr=" + address);
-    if (res.data.coupons.proofOFOG) {
-      const copy = { ...verifyList };
-      copy.gho = true;
-      setVerifyList(copy);
-    }
+    const res = await getGHO();
+    return res.data;
+  };
+
+  // BOB API
+  const getBOB = async () => {
+    const res = await axios.get("/api/zkbob?addr=" + address);
     return res;
   };
   const getBOBstatus = async () => {
-    const res = await axios.get("/api/zkbob?addr=" + address);
-    if (res.data.coupons.proofOFOG) {
-      const copy = { ...verifyList };
-      copy.zkbob = true;
-      setVerifyList(copy);
-    }
-    return res;
+    const res = await getBOB();
+    return res.data;
   };
   //TODO : call get api so to check when user logined with metamask, make claimed checkmark
   useEffect(() => {
-    const res1 = getAPEstatus();
-    const res2 = getAPEstatus();
-    const res3 = getAPEstatus();
+    getAPEstatus().then((data) => {
+      if (data.coupons.proofOfOG) {
+        setAPEStatus(true);
+      }
+      console.log(data);
+    });
+
+    getGHOstatus().then((data) => {
+      if (data.coupons.proofOfOG) {
+        setGHOStatus(true);
+      }
+      console.log(data);
+    });
+
+    getBOBstatus().then((data) => {
+      if (data.coupons.proofOfOG) {
+        setBOBStatus(true);
+      }
+      console.log(data);
+    });
   }, []);
 
-  useEffect(() => {
-    const res1 = getAPEstatus();
-    const res2 = getAPEstatus();
-    const res3 = getAPEstatus();
-  }, [verifyList]);
+  // useEffect(() => {
+  //   console.log(verifyList);
+  // }, [verifyList]);
 
   const VerifyCondition = () => {
     return (
       <div>
         {selectedCoupon === 0 ? (
-          <div>
+          <div className="conditionboxStyle">
             <div>PROOF OF APE COIN OG</div>
-            {}
-            <button onClick={() => APEProofofOG()}>Verify</button>
+            {apeStatus ? (
+              <div className="verified">Verified</div>
+            ) : (
+              <button className="v_btn" onClick={() => APEProofofOG()}>
+                Verify
+              </button>
+            )}
           </div>
         ) : selectedCoupon === 1 ? (
-          <div>
+          <div className="conditionboxStyle">
             <div>PROOF OF GHO COIN OG</div>
-            <button onClick={() => GHOProofofOG()}>Verify</button>
+            {ghoStatus ? (
+              <div className="verified">Verified</div>
+            ) : (
+              <button className="v_btn" onClick={() => GHOProofofOG()}>
+                Verify
+              </button>
+            )}
           </div>
         ) : selectedCoupon === 2 ? (
           <div>
-            <div>
+            <div className="conditionboxStyle">
               {" "}
               <div>PROOF OF SISMO BADGE 1 HOLDER</div>
-              <button>Verify</button>
+              <button className="v_btn">Verify</button>
             </div>
-            <div>
+            <div className="conditionboxStyle">
               {" "}
               <div>PROOF OF SISMO BADGE 2 HOLDER</div>
-              <button>Verify</button>
+              <button className="v_btn">Verify</button>
             </div>
           </div>
         ) : selectedCoupon === 3 ? (
-          <div>
+          <div className="conditionboxStyle">
             {" "}
             <div>PROOF OF ZKBOB TOKEN OG</div>
-            <button onClick={() => BOBProofofOG()}>Verify</button>
+            {bobStatus ? (
+              <div className="verified">Verified</div>
+            ) : (
+              <button className="v_btn" onClick={() => BOBProofofOG()}>
+                Verify
+              </button>
+            )}
           </div>
         ) : null}
       </div>
@@ -342,7 +385,10 @@ export default function Home() {
           <div
             className="reward"
             style={{ background: AnimeToColor.get(1) }}
-            onClick={() => setSelectedCoupon(0)}>
+            onClick={async () => {
+              await getAPEstatus();
+              setSelectedCoupon(0);
+            }}>
             <div className="sponsor_logo">
               <Image src={Sponor1} alt="sponsor" />
             </div>
@@ -350,7 +396,7 @@ export default function Home() {
             <div className="explanation">
               <div>APE COIN REWARD SFT</div>
               <div>PROOF OF OG x1</div>
-              <div> {verifyList.ape && <div>Verified</div>}</div>
+              <div>{apeStatus && <div className="verified">Verified</div>}</div>
             </div>
           </div>
         </div>
@@ -368,7 +414,10 @@ export default function Home() {
             <div className="explanation">
               <div>GHO TOKEN REWARD SFT</div>
               <div>PROOF OF OG x1</div>
-              <div> {verifyList.gho && <div>Verified</div>}</div>
+              <div>
+                {" "}
+                {ghoStatus && <div className="verified">Verified</div>}
+              </div>
             </div>
           </div>
         </div>
@@ -403,7 +452,10 @@ export default function Home() {
             <div className="explanation">
               <div>ZKBOB REWARD SFT</div>
               <div>PROOF OF OG x1</div>
-              <div> {verifyList.zkbob && <div>Verified</div>}</div>
+              <div>
+                {" "}
+                {bobStatus && <div className="verified">Verified</div>}
+              </div>
             </div>
           </div>
         </div>
