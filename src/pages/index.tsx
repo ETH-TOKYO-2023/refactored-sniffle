@@ -38,7 +38,7 @@ import {
 // } from "@/services/wallet.service";
 // import { truncateAddress } from "@/services/address.service";
 import { ConnectWallet } from "@/components/ConnectWallet";
-import { Contract, Provider } from "starknet";
+import { Account, Contract, Provider, ProviderInterface } from "starknet";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -116,8 +116,10 @@ export default function Home() {
     "0x005e7ccdc3677133173038d8cca7ed66236f25ff28b47c36549705337c931291",
     provider
   );
+  if (starknetAccount !== undefined) {
+    FACTORY_CONTRACT.connect(starknetAccount);
+  }
 
-  FACTORY_CONTRACT.connect(starknetAccount);
   // console.log(starknetAccount, FACTORY_CONTRACT);
 
   // const tx = useMemo(
