@@ -11,6 +11,7 @@ import Anime2 from "../../public/2.svg";
 import Sponor2 from "../../public/2_.svg";
 import Sponor3 from "../../public/3_.svg";
 import Sponor4 from "../../public/4_.svg";
+import Sponor5 from "../../public/5_.svg";
 import Anime3 from "../../public/3.svg";
 import Anime4 from "../../public/4.svg";
 import Anime5 from "../../public/5.svg";
@@ -56,12 +57,14 @@ AnimeToColor.set(1, "#fce5ad");
 AnimeToColor.set(2, "#e4daeb");
 AnimeToColor.set(3, "#c6d5e9");
 AnimeToColor.set(4, "rgb(248 204 181)");
+AnimeToColor.set(5, "#37eec3");
 
 const SponsorToName = new Map();
 SponsorToName.set(0, "APE TOKEN");
 SponsorToName.set(1, "GHO TOKEN");
 SponsorToName.set(2, "SISMO BADGE");
 SponsorToName.set(3, "BOB TOKEN");
+SponsorToName.set(4, "GNOSIS SAFE");
 
 const CouponIdToContract = new Map();
 CouponIdToContract.set(
@@ -99,7 +102,7 @@ export default function Home() {
     zkbob: false,
   });
   const [starkaccount, setstarkAccount] = useState(null);
-  const [selectedCoupon, setSelectedCoupon] = useState(4);
+  const [selectedCoupon, setSelectedCoupon] = useState(5);
 
   const { connect, connectors } = useConnectors();
   // console.log(connectors, "index");
@@ -169,6 +172,16 @@ export default function Home() {
   //BOB Proof of OG
   const BOBProofofOG = async () => {
     const res = await axios.post("/api/zkbob", {
+      addr: address,
+    });
+    console.log(address);
+    console.log(res.data);
+    setCallData(res.data);
+  };
+
+  //BOB Proof of Safe
+  const SAFEProofOfSafe = async () => {
+    const res = await axios.post("/api/gnosis-safe", {
       addr: address,
     });
     console.log(address);
@@ -246,6 +259,18 @@ export default function Home() {
     const res = await getBOB();
     return res.data;
   };
+
+  // GNOSIS SAFE API
+  const getSafe = async () => {
+    const res = await axios.get("/api/gnosis-safe?addr=" + address);
+    return res;
+  };
+  const getSafestatus = async () => {
+    const res = await getSafe();
+    return res.data;
+  };
+
+
   //TODO : call get api so to check when user logined with metamask, make claimed checkmark
   useEffect(() => {
     getAPEstatus().then((data) => {
@@ -263,6 +288,13 @@ export default function Home() {
     });
 
     getBOBstatus().then((data) => {
+      if (data.coupons.proofOfOG) {
+        setBOBStatus(true);
+      }
+      console.log(data);
+    });
+
+    getSafestatus().then((data) => {
       if (data.coupons.proofOfOG) {
         setBOBStatus(true);
       }
@@ -324,6 +356,22 @@ export default function Home() {
               </button>
             )}
           </div>
+        ) : selectedCoupon === 4 ? (
+          <div>
+            <div className="conditionboxStyle">
+              {" "}
+              <div>GNOSIS SAFE OWNER OF 1 SAFE</div>
+            </div>
+            <div className="conditionboxStyle">
+              {" "}
+              <div>GNOSIS SAFE OWNER OF 3 SAFES</div>
+            </div>
+            <div className="conditionboxStyle">
+              {" "}
+              <div>GNOSIS SAFE OWNER OF 5 SAFES</div>
+            </div>
+            <button className="v_btn" onClick={() => SAFEProofOfSafe()}>Verify</button>
+          </div>
         ) : null}
       </div>
     );
@@ -360,7 +408,7 @@ export default function Home() {
       </div>
 
       {/* {tabStatus === 0 ? : <div>using SISMO</div>} */}
-      {selectedCoupon !== 4 && (
+      {selectedCoupon !== 5 && (
         <div className="dashboard">
           <div className="tabWrapper">
             <div>
@@ -454,6 +502,23 @@ export default function Home() {
                 {" "}
                 {bobStatus && <div className="verified">Verified</div>}
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* SAFE SPONSOR */}
+        <div style={selectedCoupon == 4 ? selectedStyle : unSelectedStyle}>
+          <div
+            className="reward"
+            style={{ background: AnimeToColor.get(4) }}
+            onClick={() => setSelectedCoupon(4)}>
+            <div className="sponsor_logo">
+              <Image src={Sponor5} alt="sponsor" />
+            </div>
+            <Image src={Anime5} alt="anime" />
+            <div className="explanation">
+              <div>GNOSIS SAFE BADGE REWARD SFT</div>
+              <div>PROOF OF OWNERSHIP OF X5 SAFES</div>
             </div>
           </div>
         </div>
