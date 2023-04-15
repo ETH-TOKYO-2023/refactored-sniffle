@@ -1,6 +1,60 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*, *::before, *::after {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+/*
+  2. Remove default margin
+*/
+* {
+  margin: 0;
+}
+/*
+  3. Allow percentage-based heights in the application
+*/
+html, body {
+  height: 100%;
+}
+/*
+  Typographic tweaks!
+  4. Add accessible line-height
+  5. Improve text rendering
+*/
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+/*
+  6. Improve media defaults
+*/
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+/*
+  7. Remove built-in form typography styles
+*/
+input, button, textarea, select {
+  font: inherit;
+}
+/*
+  8. Avoid text overflows
+*/
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+/*
+  9. Create a root stacking context
+*/
+#root, #__next {
+  isolation: isolate;
+}
+
+a {
+  color: black;
+}
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -30,9 +84,25 @@ body {
   justify-content: space-between;
   color: black;
   display: flex;
-  margin: 2em;
+  flex-direction: column;
+  width: 17em;
+  cursor: pointer;
   align-items: center;
-  width: 26em;
+  height: 26em;
+  border-radius: 14px;
+}
+
+.dashboard {
+  justify-content: center;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 60em;
+  color: black;
+  align-items: center;
+  height: 14em;
+  margin-bottom: 2em;
+  background: white;
   border-radius: 14px;
 }
 .reward > img {
@@ -40,9 +110,12 @@ body {
 }
 
 .reward_wrap {
+  justify-content:center;
   display: flex;
   flex-wrap: wrap;
-
+}
+.reward_wrap > div {
+   margin: 2em;
 }
 
 .explanation > div:first-child {
@@ -50,13 +123,52 @@ body {
   font-weight: 800;
 }
 
-.explanation > div:nth-child(2) {
 
-}
 
 .sponsor_logo {
+ 
+  width: 70px;
   display: flex;
   align-items: start;
   flex-direction: column;
 }
 
+.sponsor_logo >img{
+  height: auto;
+}
+
+.description {
+     display: flex;
+    justify-content: center;
+    font-size: 6em;
+    padding: 0.3em;
+}
+
+.tabWrapper {
+      display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tabWrapper > div {
+  display: flex;
+}
+
+.tabWrapper > p{
+    font-size: x-large;
+    font-weight: 900;
+}
+
+.tabWrapper > div > button {
+      background: #5f5f5f;
+    padding: 0.1em 1.1em;
+    border-radius: 14px;
+    margin: 0.5em;
+}
+
+.connectbtn {
+  margin: 1em;
+  display: flex;
+  justify-content: center;
+
+}

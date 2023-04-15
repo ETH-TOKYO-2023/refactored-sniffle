@@ -9,7 +9,6 @@ export const { chains, provider } = configureChains(
 
 const { connectors } = getDefaultWallets({
     appName: 'My RainbowKit App',
-    projectId: 'YOUR_PROJECT_ID',
     chains
   });
 
