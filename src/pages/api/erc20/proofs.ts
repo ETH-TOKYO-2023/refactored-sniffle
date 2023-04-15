@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { ethGetProof, ethGetStorageAt } from './quicknode'
+import { ethGetProof, ethGetStorageAt, getCurrentBlockNum } from './quicknode'
 import { Data } from "../utils/data"
 import { BigNumber } from "ethers"
 
@@ -28,6 +28,87 @@ export const proofOfOG = async (address: string, contract_address: string, block
     return { blockNum: block_number, slot: balance_slot_keccak }
   }
   //}
+
+  return null
+}
+
+
+export const proofOfSismoBadge = async (contract_address: string, storage_slot_balance: number, owner: string) => {
+  const current_block = await getCurrentBlockNum();
+
+  // e.g: 0xf61cabba1e6fc166a66bca0fcaa83762edb6d4bd
+  const sismo_graphql_query = `
+  query getAllAttestationsForAccount {
+    attestations(where: {owner: ${owner}}) {
+      id
+      network
+      recordedAt
+      timestamp
+      value
+      issuer
+      owner {
+        id
+      }
+      transaction {
+        id
+      }
+      mintedBadge {
+        id
+      }
+    }
+  }
+`;
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({ sismo_graphql_query }),
+  };
+  fetch('https://api.testnets.sismo.io/', options)
+    .then(response => {
+      console.log(response)
+      if (response.ok) {
+
+        return response.json();
+      } else {
+
+        throw new Error(`Request failed. Status: ${response.status}`);
+      }
+    })
+    .then(data => {
+
+      const attestations = data.data.attestations;
+
+      attestations.forEach(async (attestation: any) => {
+        if (attestation.network == 'goerli') {
+
+          const balance_slot_keccak = ethers.utils.keccak256(
+            ethers.utils.concat([
+              ethers.utils.zeroPad(owner, 32),
+              ethers.utils.concat([
+                ethers.utils.defaultAbiCoder.encode(
+                  ['uint256'],
+                  [attestation.mintedBadge['id']]
+                ),
+                ethers.utils.defaultAbiCoder.encode(
+                  ['uint256'],
+                  // second element of the struct (0, 1, ...)
+                  [storage_slot_balance]
+                )
+              ])])
+          ) + 1
+
+          const balance = parseInt(await ethGetStorageAt(contract_address, balance_slot_keccak, current_block), 16)
+
+          console.log(balance);
+          console.log(attestation.owner['id'])
+          console.log(attestation.mintedBadge['id'])
+        }
+      });
+    })
 
   return null
 }

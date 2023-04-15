@@ -140,7 +140,8 @@ body {
 .description {
      display: flex;
     justify-content: center;
-    font-size: 6em;
+    font-size: 3em;
+    font-weight: bolder;
     padding: 0.3em;
 }
 
@@ -152,9 +153,10 @@ body {
 
 .tabWrapper > div {
   display: flex;
+   align-items: center;
 }
 
-.tabWrapper > p{
+.tabWrapper >div  > p{
     font-size: x-large;
     font-weight: 900;
 }
@@ -167,8 +169,34 @@ body {
 }
 
 .connectbtn {
-  margin: 1em;
+  position: fixed;
+  top: 40px;
+  right: 240px;
+  cursor: pointer;
+  user-select: none;
   display: flex;
-  justify-content: center;
+  align-items: center;
+}
 
+.wrapperCondition {
+  display: flex;
+  flex-direction: column;
+}
+
+.verified {
+    font-weight: bolder;
+    color: blue;
+    margin:0 10px
+}
+.v_btn {
+  background: #ff875b;
+    border: 1px solid orange;
+    border-radius: 10px;
+    margin: 0 10px;
+    color: white;
+    font-weight: bold;
+}
+
+.conditionboxStyle{
+  display: flex;
 }
