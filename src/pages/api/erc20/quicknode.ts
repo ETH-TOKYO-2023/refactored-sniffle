@@ -70,8 +70,7 @@ export const getCurrentBlockNum = async () => {
   return parseInt(data.result, 16)
 }
 
-export const ethGetProof = async (address: string, slots: string[], blockNumber: string) => {
-  console.log("eth_getProof", address, slots, blockNumber)
+export const ethGetProof = async (address: string, slots: string[], blockNumber: number) => {
   const req = await fetch(quicknode_endpoint, {
     method: 'POST',
     headers: {
@@ -82,7 +81,7 @@ export const ethGetProof = async (address: string, slots: string[], blockNumber:
       "params": [
         address,
         slots,
-        blockNumber
+        `0x${blockNumber.toString(16)}`
       ],
       "jsonrpc": "2.0",
       "id": 0
@@ -90,7 +89,6 @@ export const ethGetProof = async (address: string, slots: string[], blockNumber:
   })
 
   const data: any = await req.json()
-  console.log(data)
   return data.result
 }
 
@@ -105,7 +103,7 @@ export const ethGetStorageAt = async (address: string, slot: string, blockNumber
       "params": [
         address,
         slot,
-        blockNumber
+        `0x${blockNumber.toString(16)}`
       ],
       "jsonrpc": "2.0",
       "id": 0
