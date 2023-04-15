@@ -28,10 +28,11 @@ const post = async (_req: NextApiRequest, res: NextApiResponse<any>) => {
 }
 
 
-const get = async (_req: NextApiRequest, res: NextApiResponse<ReturnData>) => {
-  const ownerAddress = "0xB1c1124190208C43c2E322727E84CAFaF596e910"
+const get = async (req: NextApiRequest, res: NextApiResponse<ReturnData>) => {
+  //const ownerAddress = "0xB1c1124190208C43c2E322727E84CAFaF596e910"
   //const ownerAddress = "0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf"
-  const resp = await safeService.getSafesByOwner(ownerAddress)
+  const address = req.query.addr as string
+  const resp = await safeService.getSafesByOwner(address)
 
   res.status(200).json({
     coupons: {
