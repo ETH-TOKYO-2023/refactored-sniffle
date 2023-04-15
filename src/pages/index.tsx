@@ -10,7 +10,10 @@ import Anime4 from "../../public/4.svg";
 import Anime5 from "../../public/5.svg";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
+import { useContractRead } from "@starknet-react/core";
 import Link from "next/link";
+import { factoryABI } from "@/shared/factoryabi";
+import { Provider, Contract, json } from "starknet";
 
 const inter = Inter({ subsets: ["latin"] });
 const selectedStyle = {
@@ -33,10 +36,38 @@ SponsorToName.set(0, "APE TOKEN");
 SponsorToName.set(1, "GHO TOKEN");
 SponsorToName.set(2, "SISMO BADGE");
 
+const provider = new Provider({
+  sequencer: { network: "goerli-alpha" },
+});
 export default function Home() {
+  // initialize provider
+
+  // initialize deployed contract
+  const testAddress =
+    "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec";
+
+  // read abi of Test contract
+  const myTestContract = new Contract(factoryABI, testAddress, provider);
   // const [tabStatus, setTabStatus] = useState(0);
   const [selectedCoupon, setSelectedCoupon] = useState(4);
+  // const { data, isLoading, error, refetch } = useContractRead({
+  //   address:
+  //     "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec",
+  //   abi: factoryABI,
+  //   functionName: "symbol",
+  //   args: [],
+  //   watch: false,
+  // });
   const SFTs = ["APE COIN", "X XOIN", "TCCC"];
+
+  // if (isLoading) return <span>Loading...</span>;
+  // if (error) return <span>Error: {error}</span>;
+
+  const claimCoupon = async () => {
+    // Interaction with the contract with call
+    const bal1 = await myTestContract.call("name");
+    console.log(bal1);
+  };
 
   const VerifyCondition = () => {
     return (
@@ -70,7 +101,14 @@ export default function Home() {
   };
 
   const ClaimCondition = () => {
-    return <button>Claim</button>;
+    return (
+      <button
+        onClick={() => {
+          claimCoupon();
+        }}>
+        Claim
+      </button>
+    );
   };
 
   return (

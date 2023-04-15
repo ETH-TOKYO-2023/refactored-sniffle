@@ -1027,6 +1027,15 @@
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
+"@starknet-react/core@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@starknet-react/core/-/core-0.16.0.tgz#c22eec381e39b2635820056f99c701f3349cc686"
+  integrity sha512-VWBAilTrF3RAuD2laQJepx3Zhd2I8CHCA8p81hzAKlPyiUXIkLYLlGncckbRXX+a/wBSGZs+FNoqsUE0nOUYCg==
+  dependencies:
+    "@tanstack/react-query" "^4.3.4"
+    get-starknet-core "^2.0.0"
+    immutable "^4.0.0"
+
 "@swc/helpers@0.4.14":
   version "0.4.14"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.4.14.tgz#1352ac6d95e3617ccb7c1498ff019654f1e12a74"
@@ -1064,6 +1073,14 @@
   version "4.29.1"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.29.1.tgz#5f166aca63915c52f6eda930a54d6933bfd11d1b"
   integrity sha512-/crv1v+OeuGG6EOvaQmyeo9GCKtH4jbmuhZkvk9ulufRiHcTr/A9+YP9GevEAZzUTdzXMwenpTbyxBGvG2xXvw==
+  dependencies:
+    "@tanstack/query-core" "4.29.1"
+    use-sync-external-store "^1.2.0"
+
+"@tanstack/react-query@^4.3.4":
+  version "4.29.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.29.2.tgz#0b6f5b328afc6e284cb9f6cc433016d696e77ed5"
+  integrity sha512-xvLIrjn+FCplqGY66fUkDNH57u5OxYqYJ2qo2drJ7FVlE+Ee9mmJ2GlKe0Oq4K2Nv4X6yIZDMr9QqM/NRknNMA==
   dependencies:
     "@tanstack/query-core" "4.29.1"
     use-sync-external-store "^1.2.0"
@@ -1950,6 +1967,11 @@ borsh@^0.7.0:
     bn.js "^5.2.0"
     bs58 "^4.0.0"
     text-encoding-utf-8 "^1.0.2"
+
+bowser@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/bowser/-/bowser-2.11.0.tgz#5ca3c35757a7aa5771500c70a73a9f91ef420a8f"
+  integrity sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -3020,6 +3042,19 @@ get-nonce@^1.0.0:
   resolved "https://registry.yarnpkg.com/get-nonce/-/get-nonce-1.0.1.tgz#fdf3f0278073820d2ce9426c18f07481b1e0cdf3"
   integrity sha512-FJhYRoDaiatfEkUK8HKlicmu/3SGFD51q3itKDGoSTysQJBnfOcxU5GxnhE1E6soB76MbT0MBtnKJuXyAx+96Q==
 
+get-starknet-core@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/get-starknet-core/-/get-starknet-core-2.0.1.tgz#bd08ada12b58e1c5db94ccee04eb716dfa35fb5f"
+  integrity sha512-uYI8wn9a2iyIfJRSJeZvoIvAWq495AKP5U154kFf/Izet+nP/VilTxKUG6CxdUwe9KuBpG0UZE9ODIxPgBYo2w==
+
+get-starknet@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/get-starknet/-/get-starknet-2.0.0.tgz#256ca62781c8bae49e03a7da7613a829c694cc9f"
+  integrity sha512-MT5jMq0ARo4yE1MhPeWwDw2A0sp+X+HETJoZXqEzhkmeN6lv/eefpEyBbjFCleyEEnpTkZfxqhgFCnDK4OUPoA==
+  dependencies:
+    bowser "^2.11.0"
+    get-starknet-core "^2.0.0"
+
 get-symbol-description@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/get-symbol-description/-/get-symbol-description-1.0.0.tgz#7fdb81c900101fbd564dd5f1a30af5aadc1e58d6"
@@ -3243,6 +3278,11 @@ ignore@^5.2.0:
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.4.tgz#a291c0c6178ff1b960befe47fcdec301674a6324"
   integrity sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==
+
+immutable@^4.0.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.3.0.tgz#eb1738f14ffb39fd068b1dbe1296117484dd34be"
+  integrity sha512-0AOCmOip+xgJwEVTQj1EfiDDOkPmuyllDuTuEX+DDXUgapLAsBIfkg3sxCYyCEA8mQqZrrxPUGjcOQ2JS3WLkg==
 
 import-fresh@^3.0.0, import-fresh@^3.2.1:
   version "3.3.0"
