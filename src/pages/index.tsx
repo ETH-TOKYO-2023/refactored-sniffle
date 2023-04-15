@@ -28,6 +28,7 @@ import {
   useContractWrite,
   useTransaction,
   useConnectors,
+  useContract as useStarknetContract,
 } from "@starknet-react/core";
 
 //argent x
@@ -40,6 +41,7 @@ import {
 // } from "@/services/wallet.service";
 // import { truncateAddress } from "@/services/address.service";
 import { ConnectWallet } from "@/components/ConnectWallet";
+import { Contract, Provider } from "starknet";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -71,19 +73,19 @@ VerifyList.set(2, 0);
 VerifyList.set(3, 0);
 
 const CouponIdToContract = new Map();
-VerifyList.set(
+CouponIdToContract.set(
   0,
   "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
 );
-VerifyList.set(
+CouponIdToContract.set(
   1,
   "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
 );
-VerifyList.set(
+CouponIdToContract.set(
   2,
   "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
 );
-VerifyList.set(
+CouponIdToContract.set(
   3,
   "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
 );
@@ -93,27 +95,44 @@ export default function Home() {
   const [starknetClient, setStarknetClient] = useState();
   const [supportSessions, setSupportsSessions] = useState<boolean | null>(null);
   const { address, isConnected } = useAccount();
+
+  const { account: starknetAccount } = useStarknetAccount();
   // const [chain, setChain] = useState(chainId());
   const [calldata, setCallData] = useState([]);
   const [starkaccount, setstarkAccount] = useState(null);
   const [selectedCoupon, setSelectedCoupon] = useState(4);
 
   const { connect, connectors } = useConnectors();
+  console.log(connectors, "index");
+  const connector = useMemo(
+    () => connectors.find((c) => c.options.id === "argentX") ?? connectors[0],
+    [connectors]
+  );
+  console.log(connector, "index");
 
   // ------------------ contract write ------------------
-
-  const tx = useMemo(
-    () => ({
-      contractAddress: CouponIdToContract.get(selectedCoupon),
-      entrypoint: "mint_coupon",
-      calldata: calldata,
-    }),
-    [selectedCoupon, calldata]
+  const provider = new Provider({ sequencer: { network: "goerli-alpha" } });
+  const FACTORY_CONTRACT = new Contract(
+    factoryABI,
+    "0x005e7ccdc3677133173038d8cca7ed66236f25ff28b47c36549705337c931291",
+    provider
   );
-  const { writeAsync } = useContractWrite({ calls: tx });
 
-  const [txHash, setTxHash] = useState<undefined | string>(undefined);
-  const { data, isLoading, error } = useTransaction({ hash: txHash });
+  FACTORY_CONTRACT.connect(starknetAccount);
+  console.log(starknetAccount, FACTORY_CONTRACT);
+
+  // const tx = useMemo(
+  //   () => ({
+  //     contractAddress: contract?.address,
+  //     entrypoint: "mint_coupon",
+  //     calldata: [CouponIdToContract.get(selectedCoupon), calldata],
+  //   }),
+  //   [CouponIdToContract.get(selectedCoupon), calldata]
+  // );
+  // const { writeAsync } = useContractWrite({ calls: tx });
+
+  // const [txHash, setTxHash] = useState<undefined | string>(undefined);
+  // const { data, isLoading, error } = useTransaction({ hash: txHash });
   //? data is the result of the transaction, isLoading is true when the transaction is pending, error is the error if the transaction failed
 
   // ------------------ end contract write ------------------
@@ -153,13 +172,25 @@ export default function Home() {
   // ------------------ end api call  ------------------
 
   const claimCoupon = async () => {
+    console.log(
+      selectedCoupon,
+      CouponIdToContract.get(selectedCoupon),
+      calldata,
+      "dagewgewwggwe"
+    );
+
+    const res = await FACTORY_CONTRACT.invoke("mint_coupon", [
+      CouponIdToContract.get(selectedCoupon),
+      calldata,
+    ]);
+
     // Interaction with the cairo contract
 
     // ------------------ contract write ------------------
 
-    const response = await writeAsync();
-    //? See above, saving the txHash in a state and then using useTransaction to get the result
-    setTxHash(response.transaction_hash);
+    // const response = await writeAsync();
+    // //? See above, saving the txHash in a state and then using useTransaction to get the result
+    // setTxHash(response.transaction_hash);
 
     // ------------------ end contract write ------------------
 
@@ -169,7 +200,12 @@ export default function Home() {
     // ]);
     // await provider.waitForTransaction(res.transaction_hash);
     // const bal2 = await myTestContract.call("get_balance");
-    console.log(response, data, "dagewgewwggwe");
+    console.log(
+      res,
+      CouponIdToContract.get(selectedCoupon),
+      calldata,
+      "dagewgewwggwe"
+    );
 
     //? I'll write the interaction code here
   };

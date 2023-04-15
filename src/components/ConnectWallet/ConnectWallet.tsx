@@ -1,4 +1,4 @@
-import { useConnectors, useStarknet } from "@starknet-react/core";
+import { useAccount, useConnectors, useStarknet } from "@starknet-react/core";
 
 import { HiOutlineLogout } from "react-icons/hi";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import { useMemo } from "react";
 const truncateHash = (hash: any) => hash.slice(0, 5) + "..." + hash.slice(-5);
 
 export default function ConnectWallet() {
-  const { account } = useStarknet();
+  const { account } = useAccount();
   const { connectors, connect, disconnect } = useConnectors();
 
   const connector = useMemo(
@@ -19,7 +19,7 @@ export default function ConnectWallet() {
   if (account)
     return (
       <StyledConnectWallet>
-        <span>{truncateHash(account)}</span>
+        <span>{truncateHash(account.address)}</span>
         <LogoutIcon title="disconnect" onClick={() => disconnect()} />
       </StyledConnectWallet>
     );
@@ -28,7 +28,7 @@ export default function ConnectWallet() {
       <StyledConnectWallet
         title="connect"
         onClick={() => (connector ? connect(connector) : undefined)}>
-        <span>connect</span>
+        <span>connect {connector.id()}</span>
         <Image
           src="https://images.prismic.io/argentwebsite/313db37e-055d-42ee-9476-a92bda64e61d_logo.svg"
           width={40}
