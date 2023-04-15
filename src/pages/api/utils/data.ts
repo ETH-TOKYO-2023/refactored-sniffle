@@ -97,11 +97,13 @@ export class Data {
 
   toNibbles(): number[] {
     const nibbles: number[] = [];
+    const bytes = this.rawBytes;
 
-    for (const byte of this.rawBytes) {
-      nibbles.push(byte >> 4);
-      nibbles.push(byte % 2 ** 4);
+    for (let i = 0; i < bytes.length; i++) {
+      nibbles.push(bytes[i] >> 4);
+      nibbles.push(bytes[i] & 0x0F);
     }
+
     return this.oddNibbles ? nibbles.slice(1) : nibbles;
   }
 }

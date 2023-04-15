@@ -63,6 +63,7 @@ export const proofOfSismoBadge = async (contract_address: string, storage_slot_b
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
     },
     body: JSON.stringify({ sismo_graphql_query }),
   };
