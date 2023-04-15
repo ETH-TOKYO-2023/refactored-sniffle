@@ -29,7 +29,7 @@ const post = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
 
 const get = async (req: NextApiRequest, res: NextApiResponse<ReturnData>) => {
-  const address = req.body.addr as string
+  const address = req.query.addr as string
   const blockNum = contract_data.genesisBlock == -1 ? await getCurrentBlockNum() : contract_data.genesisBlock
   const proofOG = await proofOfOG(address, contract_data.address, blockNum, contract_data.storage_slot_balance)
   res.status(200).json({

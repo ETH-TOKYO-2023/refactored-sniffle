@@ -21,12 +21,9 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { factoryABI } from "@/shared/factoryabi";
 
-//! I don't think using starknetjs on the browser is a good idea, it's better to use starknet-react
-//? All documentation for starknet-react is here: https://apibara.github.io/starknet-react/hooks
+//starknet
 import {
   useAccount as useStarknetAccount,
-  useContractWrite,
-  useTransaction,
   useConnectors,
   useContract as useStarknetContract,
 } from "@starknet-react/core";
@@ -66,12 +63,6 @@ SponsorToName.set(1, "GHO TOKEN");
 SponsorToName.set(2, "SISMO BADGE");
 SponsorToName.set(3, "BOB TOKEN");
 
-const VerifyList = new Map();
-VerifyList.set(0, 0);
-VerifyList.set(1, 0);
-VerifyList.set(2, 0);
-VerifyList.set(3, 0);
-
 const CouponIdToContract = new Map();
 CouponIdToContract.set(
   0,
@@ -99,16 +90,21 @@ export default function Home() {
   const { account: starknetAccount } = useStarknetAccount();
   // const [chain, setChain] = useState(chainId());
   const [calldata, setCallData] = useState([]);
+  const [verifyList, setVerifyList] = useState({
+    ape: false,
+    gho: false,
+    zkbob: false,
+  });
   const [starkaccount, setstarkAccount] = useState(null);
   const [selectedCoupon, setSelectedCoupon] = useState(4);
 
   const { connect, connectors } = useConnectors();
-  console.log(connectors, "index");
+  // console.log(connectors, "index");
   const connector = useMemo(
     () => connectors.find((c) => c.options.id === "argentX") ?? connectors[0],
     [connectors]
   );
-  console.log(connector, "index");
+  // console.log(connector, "index");
 
   // ------------------ contract write ------------------
   const provider = new Provider({ sequencer: { network: "goerli-alpha" } });
@@ -119,7 +115,7 @@ export default function Home() {
   );
 
   FACTORY_CONTRACT.connect(starknetAccount);
-  console.log(starknetAccount, FACTORY_CONTRACT);
+  // console.log(starknetAccount, FACTORY_CONTRACT);
 
   // const tx = useMemo(
   //   () => ({
@@ -172,12 +168,12 @@ export default function Home() {
   // ------------------ end api call  ------------------
 
   const claimCoupon = async () => {
-    console.log(
-      selectedCoupon,
-      CouponIdToContract.get(selectedCoupon),
-      calldata,
-      "dagewgewwggwe"
-    );
+    // console.log(
+    //   selectedCoupon,
+    //   CouponIdToContract.get(selectedCoupon),
+    //   calldata,
+    //   "dagewgewwggwe"
+    // );
 
     const res = await FACTORY_CONTRACT.invoke("mint_coupon", [
       CouponIdToContract.get(selectedCoupon),
@@ -200,17 +196,55 @@ export default function Home() {
     // ]);
     // await provider.waitForTransaction(res.transaction_hash);
     // const bal2 = await myTestContract.call("get_balance");
-    console.log(
-      res,
-      CouponIdToContract.get(selectedCoupon),
-      calldata,
-      "dagewgewwggwe"
-    );
+    // console.log(
+    //   res,
+    //   CouponIdToContract.get(selectedCoupon),
+    //   calldata,
+    //   "dagewgewwggwe"
+    // );
 
     //? I'll write the interaction code here
   };
+
+  const getAPEstatus = async () => {
+    const res = await axios.get("/api/apecoin?addr=" + address);
+    if (res.data.coupons.proofOFOG) {
+      const copy = { ...verifyList };
+      copy.ape = true;
+      setVerifyList(copy);
+    }
+    return res;
+  };
+  const getGHOstatus = async () => {
+    const res = await axios.get("/api/aave-gho?addr=" + address);
+    if (res.data.coupons.proofOFOG) {
+      const copy = { ...verifyList };
+      copy.gho = true;
+      setVerifyList(copy);
+    }
+    return res;
+  };
+  const getBOBstatus = async () => {
+    const res = await axios.get("/api/zkbob?addr=" + address);
+    if (res.data.coupons.proofOFOG) {
+      const copy = { ...verifyList };
+      copy.zkbob = true;
+      setVerifyList(copy);
+    }
+    return res;
+  };
   //TODO : call get api so to check when user logined with metamask, make claimed checkmark
-  // useEffect(() => {}, []);
+  useEffect(() => {
+    const res1 = getAPEstatus();
+    const res2 = getAPEstatus();
+    const res3 = getAPEstatus();
+  }, []);
+
+  useEffect(() => {
+    const res1 = getAPEstatus();
+    const res2 = getAPEstatus();
+    const res3 = getAPEstatus();
+  }, [verifyList]);
 
   const VerifyCondition = () => {
     return (
@@ -275,7 +309,9 @@ export default function Home() {
       </div>
       <div>
         <ConnectWallet />
-        <ConnectButton />
+        <div className="connectbtn">
+          <ConnectButton />
+        </div>
       </div>
 
       {/* {tabStatus === 0 ? : <div>using SISMO</div>} */}
@@ -292,7 +328,7 @@ export default function Home() {
               </div>
               {/* <div onClick={() => setTabStatus(1)}>EVM</div> */}
             </div>
-            <div>
+            <div className="wrapperCondition">
               <VerifyCondition />
               <ClaimCondition />
             </div>
@@ -313,10 +349,8 @@ export default function Home() {
             <Image src={Anime1} alt="anime" />
             <div className="explanation">
               <div>APE COIN REWARD SFT</div>
-              <div>
-                PROOF OF OG x1
-                {isConnected && <div>Verified</div>}
-              </div>
+              <div>PROOF OF OG x1</div>
+              <div> {verifyList.ape && <div>Verified</div>}</div>
             </div>
           </div>
         </div>
@@ -334,6 +368,7 @@ export default function Home() {
             <div className="explanation">
               <div>GHO TOKEN REWARD SFT</div>
               <div>PROOF OF OG x1</div>
+              <div> {verifyList.gho && <div>Verified</div>}</div>
             </div>
           </div>
         </div>
@@ -368,6 +403,7 @@ export default function Home() {
             <div className="explanation">
               <div>ZKBOB REWARD SFT</div>
               <div>PROOF OF OG x1</div>
+              <div> {verifyList.zkbob && <div>Verified</div>}</div>
             </div>
           </div>
         </div>
