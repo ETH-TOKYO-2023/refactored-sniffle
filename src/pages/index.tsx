@@ -361,16 +361,15 @@ export default function Home() {
       {selectedCoupon !== 4 && (
         <div className="dashboard">
           <div className="tabWrapper">
-            <p> {SponsorToName.get(selectedCoupon)} SFT reward on Starknet</p>
             <div>
-              <div></div>
-              <div>
+              <p> {SponsorToName.get(selectedCoupon)} SFT reward on Starknet</p>
+              <div style={{ margin: "0 10px" }}>
                 <Link target="_" href="https://www.herodotus.dev/">
                   using HERODOTUS API
                 </Link>{" "}
               </div>
-              {/* <div onClick={() => setTabStatus(1)}>EVM</div> */}
             </div>
+
             <div className="wrapperCondition">
               <VerifyCondition />
               <ClaimCondition />

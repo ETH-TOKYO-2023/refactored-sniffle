@@ -153,9 +153,10 @@ body {
 
 .tabWrapper > div {
   display: flex;
+   align-items: center;
 }
 
-.tabWrapper > p{
+.tabWrapper >div  > p{
     font-size: x-large;
     font-weight: 900;
 }
