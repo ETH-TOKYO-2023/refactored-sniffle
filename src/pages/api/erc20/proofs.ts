@@ -1,6 +1,5 @@
 import { ethers } from 'ethers'
-import { ethGetProof, ethGetStorageAt, getTxsInBlockInterval } from './quicknode'
-import { Abi, Contract, Provider, number } from "starknet"
+import { ethGetProof, ethGetStorageAt } from './quicknode'
 import { Data } from "../utils/data"
 import { BigNumber } from "ethers"
 
@@ -78,20 +77,6 @@ export const starknetVerify = async (address: string, slot: string, blockNum: nu
     flatProofValues = flatProofValues.concat(element.values);
   }
 
-  const starknetProvider = new Provider({
-    sequencer: { network: "goerli-alpha" },
-  });
-
-  /*
-  let abi: Abi = {
-  };
-
-  const factsRegistry = new Contract(
-    abi,
-    process.env.HERODOTUS_FACTS_REGISTRY_ADDR!,
-    starknetProvider
-  );*/
-
   const slot_from_hex = Data.fromHex(slot)
     .toInts()
     .values.map((value: any) => value.toHexString())
@@ -107,7 +92,7 @@ export const starknetVerify = async (address: string, slot: string, blockNum: nu
     ...flatProofWordLengths.map((length) => "0x" + length.toString(16)),
     BigNumber.from(flatProofValues.length).toHexString(),
     ...flatProofValues.map((value) => value.toHexString()),
-  ];
+  ]
 
-  //await factsRegistry.call("get_storage_uint", calldata);
+  return calldata
 }

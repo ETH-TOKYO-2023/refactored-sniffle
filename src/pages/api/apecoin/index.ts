@@ -14,19 +14,18 @@ let contract_data = {
 }
 const address = '0xC29dC373AEbC2db141Aa5A8EF109CEe746a99ab8'
 
-const post = async (_req: NextApiRequest, res: NextApiResponse<ReturnData>) => {
+const post = async (_req: NextApiRequest, res: NextApiResponse<any>) => {
   //const address = req.query.addr as string
   if (contract_data.genesisBlock == -1) {
     contract_data.genesisBlock = await getCurrentBlockNum()
   }
   const proofOG = await proofOfOG(address, contract_data.address, contract_data.genesisBlock, contract_data.storage_slot_balance)
-  console.log(proofOG)
   if (!proofOG) return res.status(500).json({ coupons: { "proofOfOG": false } })
 
-  //await herodotusProof(contract_data.address, proofOG?.blockNum)
-  await starknetVerify(contract_data.address, proofOG?.slot, proofOG?.blockNum)
+  await herodotusProof(contract_data.address, proofOG?.blockNum)
+  const calldata = await starknetVerify(contract_data.address, proofOG?.slot, proofOG?.blockNum)
 
-  return res.status(200).json({ coupons: { "proofOfOG": true } })
+  return res.status(200).json(calldata)
 }
 
 
