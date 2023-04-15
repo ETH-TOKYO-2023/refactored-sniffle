@@ -12,10 +12,12 @@ let contract_data = {
   genesisBlock: -1,
   storage_slot_balance: 0
 }
-const address = '0xC29dC373AEbC2db141Aa5A8EF109CEe746a99ab8'
+
+
+// const address = '0xC29dC373AEbC2db141Aa5A8EF109CEe746a99ab8'
 
 const post = async (_req: NextApiRequest, res: NextApiResponse<any>) => {
-  //const address = req.query.addr as string
+  const address = _req.body.addr as string
   if (contract_data.genesisBlock == -1) {
     contract_data.genesisBlock = await getCurrentBlockNum()
   }
@@ -31,6 +33,7 @@ const post = async (_req: NextApiRequest, res: NextApiResponse<any>) => {
 
 const get = async (_req: NextApiRequest, res: NextApiResponse<ReturnData>) => {
   //const address = req.query.addr as string
+  const address = _req.body.addr as string
   const blockNum = contract_data.genesisBlock == -1 ? await getCurrentBlockNum() : contract_data.genesisBlock
   const proofOG = await proofOfOG(address, contract_data.address, blockNum, contract_data.storage_slot_balance)
   res.status(200).json({

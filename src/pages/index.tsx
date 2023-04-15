@@ -10,10 +10,12 @@ import Anime4 from "../../public/4.svg";
 import Anime5 from "../../public/5.svg";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
+import axios from "axios";
 import { useContractRead } from "@starknet-react/core";
 import Link from "next/link";
 import { factoryABI } from "@/shared/factoryabi";
 import { Provider, Contract, json } from "starknet";
+import { useAccount } from "wagmi";
 
 const inter = Inter({ subsets: ["latin"] });
 const selectedStyle = {
@@ -36,36 +38,45 @@ SponsorToName.set(0, "APE TOKEN");
 SponsorToName.set(1, "GHO TOKEN");
 SponsorToName.set(2, "SISMO BADGE");
 
+const VerifyList = new Map();
+VerifyList.set(0, 0);
+VerifyList.set(1, 0);
+VerifyList.set(2, 0);
+
 const provider = new Provider({
   sequencer: { network: "goerli-alpha" },
 });
-export default function Home() {
-  // initialize provider
 
-  // initialize deployed contract
+export default function Home() {
+  const { address } = useAccount();
   const testAddress =
     "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec";
 
   // read abi of Test contract
   const myTestContract = new Contract(factoryABI, testAddress, provider);
-  // const [tabStatus, setTabStatus] = useState(0);
   const [selectedCoupon, setSelectedCoupon] = useState(4);
-  // const { data, isLoading, error, refetch } = useContractRead({
-  //   address:
-  //     "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec",
-  //   abi: factoryABI,
-  //   functionName: "symbol",
-  //   args: [],
-  //   watch: false,
-  // });
+  // const [verifyList, setVerifyList] =
   const SFTs = ["APE COIN", "X XOIN", "TCCC"];
 
-  // if (isLoading) return <span>Loading...</span>;
-  // if (error) return <span>Error: {error}</span>;
+  const APEProofofOG = async () => {
+    const res = await axios.post("/api/apecoin", {
+      addr: address,
+    });
+    console.log(address);
+    console.log(res);
+  };
 
   const claimCoupon = async () => {
-    // Interaction with the contract with call
+    // Interaction with the cairo contract
     const bal1 = await myTestContract.call("name");
+    const res = await myTestContract.invoke("mint_coupon", [
+      "0x072ff0ad087a3100fb7bf71d60d1f9b8e7d34a7dccfa09ebc629d23f08de4ac1",
+      0,
+      [],
+    ]);
+    await provider.waitForTransaction(res.transaction_hash);
+    const bal2 = await myTestContract.call("get_balance");
+    console.log(bal2);
     console.log(bal1);
   };
 
@@ -75,7 +86,8 @@ export default function Home() {
         {selectedCoupon === 0 ? (
           <div>
             <div>PROOF OF APE COIN OG</div>
-            <button>Verify</button>
+            {}
+            <button onClick={() => APEProofofOG()}>Verify</button>
           </div>
         ) : selectedCoupon === 1 ? (
           <div>
