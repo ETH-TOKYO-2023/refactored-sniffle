@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.12.8",
+    "@safe-global/api-kit": "^1.0.1",
     "@starknet-react/core": "^0.16.0",
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
