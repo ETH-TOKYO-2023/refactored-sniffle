@@ -7,12 +7,12 @@ type ReturnData = {
 }
 
 let contract_data = {
-  address: '0x328507DC29C95c170B56a1b3A758eB7a9E73455c',
-  creation_tx: '0xc2349c284ec8ec5cd8d735bb971583ef49d6d04d5048cd34adf994ce326642fd',
+  address: '0x60a11fba848D6BA85632f70077d3EdFdA5678087',
+  creation_tx: '0x699da192030505fffa147939d2cc938049ad269385c0ba8f3cec053e6174b975',
   genesisBlock: -1,
-  storage_slot_balance: 0
+  storage_slot_balance: 1
 }
-const address = '0xC29dC373AEbC2db141Aa5A8EF109CEe746a99ab8'
+const address = '0xA6725238a5f4Cf0253Ca0F59d2c3a1D9B6EcC27f'
 
 const post = async (_req: NextApiRequest, res: NextApiResponse<any>) => {
   //const address = req.query.addr as string
