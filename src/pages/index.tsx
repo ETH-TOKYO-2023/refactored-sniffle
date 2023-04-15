@@ -83,6 +83,10 @@ CouponIdToContract.set(
   3,
   "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
 );
+CouponIdToContract.set(
+  4,
+  "0x03b2ee4cbdf2ce378bf7aef77106b0d88d411d863846ec7c00631ccdcc3205ec"
+);
 
 export default function Home() {
   const [starkaddress, setstarkAddress] = useState<String>();
