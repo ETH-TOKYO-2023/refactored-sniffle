@@ -81,7 +81,7 @@ export const proofOfSismoBadge = async (contract_address: string, storage_slot_b
     .then(data => {
 
       const attestations = data.data.attestations;
-
+      let totalBalance = 0;
       attestations.forEach(async (attestation: any) => {
         if (attestation.network == 'goerli') {
 
@@ -103,9 +103,12 @@ export const proofOfSismoBadge = async (contract_address: string, storage_slot_b
 
           const balance = parseInt(await ethGetStorageAt(contract_address, balance_slot_keccak, current_block), 16)
 
-          console.log(balance);
+          totalBalance += balance;
           console.log(attestation.owner['id'])
           console.log(attestation.mintedBadge['id'])
+
+          return totalBalance
+
         }
       });
     })
